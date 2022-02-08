@@ -1,0 +1,45 @@
+<head>
+    <meta charset="UTF-8" />
+    <title>Formulário de Login Bank</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <link rel="stylesheet" type="text/css" href="{{=URL('static','css/customcss.css')}}" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+  </head>
+  <body>
+    <div class="container" >       
+      <div class="content">      
+        <!--FORMULÁRIO DE LOGIN-->
+        <div id="login">
+          <form method="post" action="{{=URL()}}"> 
+            <h1>Login</h1> 
+            <p> 
+              <label for="nome_login">Seu username</label>
+              <input id="nome_login" name="nome_login" required="required" type="text" placeholder="Nome de Utilizador"/>
+            </p>
+             
+            <p> 
+              <label for="email_login">Sua palavra-passe</label>
+              <input id="email_login" name="password_login" required="required" type="password" placeholder="ex. senha" /> 
+            </p>
+            <p>
+              <input type="submit" value="Login" /> 
+            </p>
+            <p>
+              {{ if session.erro == 1: }}
+                <center>{{=mensagem_erro}}</center>
+              {{pass}}
+            </p>
+             
+            <p class="link">
+              Ainda não tem conta?
+              <a href="{{=URL('default','registar')}}">Registar</a>
+            </p>
+          </form>
+        </div>
+      </div>
+    </div>  
+  </body>
+  </html>
