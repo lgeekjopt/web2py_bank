@@ -1,0 +1,190 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+        <title>Platforma Bank</title>
+        
+    </head>
+    <body>
+       
+        <div class="container-fluid">
+             <div class="row">
+                 <div class="col-sm">
+            {{ if session.id_login: }}
+                Nome <b>{{=session.nome_user}}</b>
+                <br />
+                O seu saldo global <b>{{=saldo_total}}</b> <br />
+                Saldo a ordem <b>{{=saldo_ordem}}</b> <br />
+                Saldo a prazo <b>{{=saldo_prazo}}</b> <br />
+                <button onClick="window.location.href=window.location.href">Refresh Page</button>
+                <hr />
+                <!-- mostrar mensagem consoante operacao -->
+                {{ if request.vars.depositar: }}
+                    {{=resultado}}
+                {{ elif request.vars.levantar: }}
+                    {{=resultado}}
+                {{ elif request.vars.enviarDinheiroExterno: }}
+                    {{=resultado}}
+                {{ elif request.vars.enviarDinheiroInterno: }}
+                    {{=resultado}}
+                {{ pass }}
+                <hr />
+                <div id="accordion">
+                  <div class="card">
+                    <div class="card-header" id="headingOne">
+                      <h5 class="mb-0">
+                        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                          Tabela de Transferencias
+                        </button>
+                      </h5>
+                    </div>
+                    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                      <div class="card-body">
+                          <form method="post" action="{{=URL()}}" id="formTransf">
+                              <button type="submit" class="btn btn-light">Todas</button>
+                              <button type="submit" name="tipoI" class="btn btn-light" value="internas">Internas</button>
+                              <button type="submit" name="tipoE" class="btn btn-light" value="externas">Externas</button>
+                              <input type="hidden" name="tabelaTransf" value="sim" />
+                          </form>
+                          {{if request.vars.tipoI: }}
+                              Mostrando as Transferencias Internas <br />
+                              {{=tabela_transferencias}}
+                          {{elif request.vars.tipoE: }}
+                              Mostrando as Transferencias Externas <br />
+                              {{=tabela_transferencias}}
+                        {{else: }}
+                              Mostrando todo tipo transferencias <br />
+                              {{=tabela_transferencias}}
+                          {{pass}}
+                          <br />
+                        <p>
+                              Transferencias Internas sao transferencias o mesmo utilizador (ordem-prazo) <br />
+                              Transferencias Externas sao transferencias para outros utilizadores
+                          </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card">
+                    <div class="card-header" id="headingTwo">
+                      <h5 class="mb-0">
+                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                            Tabela de Movimentos
+                        </button>
+                      </h5>
+                    </div>
+
+                    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                      <div class="card-body">
+                        {{=tabela_movimentos}}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card">
+                    <div class="card-header" id="headingThree">
+                      <h5 class="mb-0">
+                        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseTwo">
+                          Lista de Utilizadores
+                        </button>
+                      </h5>
+                    </div>
+                    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+                      <div class="card-body">
+                          <p>
+                              O ID e utilizado para diferenciar os utilizadores. <br />
+                              Iras usa-lo para transferir para outros. 
+                          </p>
+                        {{=users_existentes}}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card">
+                    <div class="card-header" id="headingFour">
+                      <h5 class="mb-0">
+                        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseThree">
+                          Operacoes
+                        </button>
+                      </h5>
+                    </div>
+                    <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordion">
+                      <div class="card-body">
+                        <form method="post" action="{{=URL()}}">
+                            <label for="valorDep">Valor a Depositar </label>
+                            <input type="hidden" name="depositar" value="sim" />
+                            <input type="number" step="0.01" min="0.01" max="10000" name="valorDep" />
+                            <input type="submit" value="Depositar" />
+                        </form>
+                                <hr />
+            
+                                <form method="post" action="{{=URL()}}">
+                                    <label for="valorLev">Valor a Levantar </label> 
+                                    <input type="hidden" name="levantar" value="sim" />
+                                    <input type="number" step="0.01" min="0.01" max="10000" name="valorLev" />
+                                    <input type="submit" value="Levantar" />
+                                </form>
+
+                                <hr />
+                                Enviar Dinheiro para outro utilizador <br />
+                                <form method="post" action="{{=URL()}}">
+                                    <label for="id_destino">ID Destino </label>
+                                    <input type="number" min="1" max="300" name="idDestino" /> <br />
+                                    <label for="id_destino">Valor Enviar </label>
+                                    <input type="number" step="0.01" min="0.01" max="10000" name="valorEnviar" />
+                                    <input type="hidden" name="enviarDinheiroExterno" value="sim" />
+                                    <input type="submit" value="Enviar" />
+                                </form>
+
+                                <hr />
+                                Transferir Dinheiro para tuas contas <br />
+                                <form method="post" action="{{=URL()}}" id="contaForm">
+                                    <label for="contaOrigem">Conta Origem </label>
+                                    <select name="contasOrigem" form="contaForm">
+                                      <option value="ordem">Ordem</option>
+                                      <option value="prazo">Prazo</option>
+                                    </select>
+                                    <br />
+                                    <label for="contaDestino">Conta Destino </label>
+                                    <select name="contasDestino" form="contaForm">
+                                      <option value="ordem">Ordem</option>
+                                      <option value="prazo">Prazo</option>
+                                    </select>
+                                    <br />
+                                    <label for="valor">Valor a Transferir </label>
+                                    <input type="number" step="0.01" min="0.01" max="10000" name="valorAEnviar" />
+                                    <input type="hidden" name="enviarDinheiroInterno" value="sim" />
+                                    <input type="submit" value="Enviar" />
+                                </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+        
+                <hr />
+                <form method="post" action="{{=URL()}}">
+                    <input type="hidden" name="terminar" value="sim" />
+                    <input type="submit" value="Logout" />
+                </form>
+            
+            {{ else: }}
+            <h1 style=text-align:center !important;>
+                Sem Login, pagina indisponivel
+            </h1> 
+            <br />
+            <a href="{{=URL('default','index')}}">
+               <button>Pagina Login</button>
+            </a>
+            {{pass}}
+            
+            <!-- {{ if session.nome_visitante: }}
+            Ola {{=session.nome_visitante}} (dados em cookie do form anterior)<br />
+            Nome do utilizador {{=session.nome}} (dados em cookie - que vem de query sql)<br />
+            Aqui tabela {{=criko}}
+            {{ else: }}
+            ola nao existe sessao iniciada
+            {{pass}} -->
+        </div>
+        </div>
+        </div>
+    </body>
+</html>
