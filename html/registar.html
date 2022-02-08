@@ -1,0 +1,47 @@
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Formulário de Registro Bank</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <link rel="stylesheet" type="text/css" href="{{=URL('static','css/customcss.css')}}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </head>
+  <body>
+<div class="container">    
+    <div class="content">
+      <!--FORMULÁRIO DE CADASTRO-->
+      <div id="cadastro">
+        <form method="post" action="{{=URL()}}"> 
+          <h1>Pagina de Registo</h1> 
+          <p> 
+            <label for="nome_cad">Nome</label>
+            <input id="nome_cad" name="nome_cad" required="required" type="text" placeholder="Alberto" />
+          </p>
+          <p> 
+            <label for="email_cad">Username</label>
+            <input id="email_cad" name="username_cad" required="required" type="text" placeholder="username"/> 
+          </p>
+          <p> 
+            <label for="senha_cad">Password</label>
+            <input id="senha_cad" name="senha_cad" required="required" type="password" placeholder="1234"/>
+          </p>
+          <p> 
+            <input type="submit" value="Registar"/> 
+          </p>
+          <p>
+              {{ if session.register_erro == 1: }}
+                <center>{{=mensagem_erro}}</center>
+              {{ elif session.register_erro == 2: }}
+                <center>{{=mensagem_erro}}</center>
+              {{pass}}
+            </p>
+          <p class="link">
+            Já tem conta?
+            <a href="{{=URL('index')}}"> Ir para Login </a>
+          </p>
+        </form>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
